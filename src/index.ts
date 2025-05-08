@@ -267,7 +267,9 @@ async function main() {
       version: "0.1.0",
     },
     {
-      capabilities: {},
+      capabilities: {
+        tools: true, // Advertise tool capability
+      },
     },
   );
 
