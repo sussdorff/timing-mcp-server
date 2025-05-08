@@ -1,79 +1,20 @@
-import {
-  McpServer,
-  ResourceTemplate,
-  ToolHandler,
-} from "@modelcontextprotocol/sdk/server/mcp.js";
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
-import { Tool } from "@modelcontextprotocol/sdk/types.js";
-import { TimingAPIClient } from "timing-api-client";
-
-const server = new McpServer({
-  name: "Timing",
-  version: "0.0.1",
-});
-
-const apiClient = new TimingAPIClient();
-
-// Placeholder handler functions
-const handleListProjects: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleListProjects called with input:", input);
-  return { projects: [] };
-};
-
-const handleGetProject: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleGetProject called with input:", input);
-  return { project: {} };
-};
-
-const handleCreateProject: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleCreateProject called with input:", input);
-  return { project: {} };
-};
-
-const handleUpdateProject: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleUpdateProject called with input:", input);
-  return { project: {} };
-};
-
-const handleStartTimeEntry: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleStartTimeEntry called with input:", input);
-  return { time_entry: {} };
-};
-
-const handleStopTimeEntry: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleStopTimeEntry called with input:", input);
-  return { time_entry: {} };
-};
-
-const handleListTimeEntries: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleListTimeEntries called with input:", input);
-  return { time_entries: [] };
-};
-
-const handleCreateTimeEntry: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleCreateTimeEntry called with input:", input);
-  return { time_entry: {} };
-};
-
-const handleGetTimeEntry: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleGetTimeEntry called with input:", input);
-  return { time_entry: {} };
-};
-
-const handleUpdateTimeEntry: ToolHandler = async (input) => {
-  // TODO: Implement using apiClient
-  console.log("handleUpdateTimeEntry called with input:", input);
-  return { time_entry: {} };
-};
+import {
+  CallToolRequest,
+  CallToolRequestSchema,
+  ListToolsRequestSchema,
+  Tool,
+} from "@modelcontextprotocol/sdk/types.js";
+import {
+  CreateTimeEntryOptions,
+  StartTimerOptions,
+  TimingClient,
+} from "timing-api-client";
+import {
+  CreateProjectOptions,
+  ListProjectsQuery,
+} from "timing-api-client/dist/resources/projects";
 
 const listProjectsTool: Tool = {
   name: "timing_list_projectss",
@@ -89,8 +30,6 @@ const listProjectsTool: Tool = {
   },
 };
 
-server.registerTool(listProjectsTool, handleListProjects);
-
 const projectTool: Tool = {
   name: "timing_project",
   description: "Get project details",
@@ -104,8 +43,6 @@ const projectTool: Tool = {
     },
   },
 };
-
-server.registerTool(projectTool, handleGetProject);
 
 const createProjectTool: Tool = {
   name: "timing_create_project",
@@ -137,15 +74,13 @@ const createProjectTool: Tool = {
   },
 };
 
-server.registerTool(createProjectTool, handleCreateProject);
-
 const updateProjectTool: Tool = {
   name: "timing_update_project",
   description: "Update an existing project",
   inputSchema: {
     type: "object",
     properties: {
-      project_id: {
+      projectId: {
         type: "string",
         description: "The ID of the project.",
       },
@@ -161,15 +96,13 @@ const updateProjectTool: Tool = {
         type: "string",
         description: "Notes for the project.",
       },
-      productivity_score: {
+      productivityScore: {
         type: "number",
         description: "Productivity score for the project. Betweeb -1 and 1.",
       },
     },
   },
 };
-
-server.registerTool(updateProjectTool, handleUpdateProject);
 
 const startTimeEntryTool: Tool = {
   name: "timing_start_time_entry",
@@ -185,7 +118,7 @@ const startTimeEntryTool: Tool = {
         type: "string",
         description: "Title of the time entry.",
       },
-      start_date: {
+      startDate: {
         type: "string",
         description: "Start date of the time entry.",
       },
@@ -197,8 +130,6 @@ const startTimeEntryTool: Tool = {
   },
 };
 
-server.registerTool(startTimeEntryTool, handleStartTimeEntry);
-
 const stopTimeEntryTool: Tool = {
   name: "timing_stop_time_entry",
   description: "Stop the current time entry",
@@ -207,19 +138,17 @@ const stopTimeEntryTool: Tool = {
   },
 };
 
-server.registerTool(stopTimeEntryTool, handleStopTimeEntry);
-
 const listTimeEntriesTool: Tool = {
   name: "timing_list_time_entries",
   description: "List time entries",
   inputSchema: {
     type: "object",
     properties: {
-      start_date_min: {
+      startDateMin: {
         type: "string",
         description: "Start date of the time entry.",
       },
-      end_date_max: {
+      endDateMax: {
         type: "string",
         description: "End date of the time entry.",
       },
@@ -230,27 +159,25 @@ const listTimeEntriesTool: Tool = {
           description: "The ID of the project.",
         },
       },
-      include_child_projects: {
+      includeChildProjects: {
         type: "boolean",
         description: "Include child projects.",
       },
-      search_query: {
+      searchQuery: {
         type: "string",
         description: "Search query for the time entry.",
       },
-      is_runninng: {
+      isRunninng: {
         type: "boolean",
         description: "Is the time entry running.",
       },
-      include_project_data: {
+      includeProjectData: {
         type: "boolean",
         description: "Include project data.",
       },
     },
   },
 };
-
-server.registerTool(listTimeEntriesTool, handleListTimeEntries);
 
 const createTimeEntryTool: Tool = {
   name: "timing_create_time_entry",
@@ -266,11 +193,11 @@ const createTimeEntryTool: Tool = {
         type: "string",
         description: "Title of the time entry.",
       },
-      start_date: {
+      startDate: {
         type: "string",
         description: "Start date of the time entry.",
       },
-      end_date: {
+      endDate: {
         type: "string",
         description: "End date of the time entry.",
       },
@@ -281,8 +208,6 @@ const createTimeEntryTool: Tool = {
     },
   },
 };
-
-server.registerTool(createTimeEntryTool, handleCreateTimeEntry);
 
 const timeEntryTool: Tool = {
   name: "timing_time_entry",
@@ -298,15 +223,13 @@ const timeEntryTool: Tool = {
   },
 };
 
-server.registerTool(timeEntryTool, handleGetTimeEntry);
-
 const updateTimeEntryTool: Tool = {
   name: "timing_update_time_entry",
   description: "Update an existing time entry",
   inputSchema: {
     type: "object",
     properties: {
-      time_entry_id: {
+      timeEntryId: {
         type: "string",
         description: "The ID of the time entry.",
       },
@@ -314,11 +237,11 @@ const updateTimeEntryTool: Tool = {
         type: "string",
         description: "Title of the time entry.",
       },
-      start_date: {
+      startDate: {
         type: "string",
         description: "Start date of the time entry.",
       },
-      end_date: {
+      endDate: {
         type: "string",
         description: "End date of the time entry.",
       },
@@ -330,7 +253,216 @@ const updateTimeEntryTool: Tool = {
   },
 };
 
-server.registerTool(updateTimeEntryTool, handleUpdateTimeEntry);
+async function main() {
+  const apiKey = process.env.TIMING_API_KEY;
+  if (!apiKey) {
+    console.error("TIMING_API_KEY environment variable is not set.");
+    process.exit(1);
+  }
 
-const transport = new StdioServerTransport();
-await server.connect(transport);
+  console.log("Connecting to Timing API...");
+  const server = new Server(
+    {
+      name: "timing",
+      version: "0.1.0",
+    },
+    {
+      capabilities: {},
+    },
+  );
+
+  const timingClient = new TimingClient({
+    apiKey: apiKey,
+  });
+
+  server.setRequestHandler(
+    CallToolRequestSchema,
+    async (request: CallToolRequest) => {
+      console.error("Received request:", request);
+
+      try {
+        if (!request.params.arguments) {
+          throw new Error("No arguments provided");
+        }
+
+        switch (request.params.name) {
+          case "timing_list_projects": {
+            const args = request.params.arguments as ListProjectsQuery;
+            const response = await timingClient.projects.list(args);
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+
+          case "timing_project": {
+            const args = request.params.arguments as { id: string };
+            const response = await timingClient.projects.get(args.id);
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+
+          case "timing_create_project": {
+            const args = request.params
+              .arguments as unknown as CreateProjectOptions;
+            const response = await timingClient.projects.create(args);
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+          case "timing_update_project": {
+            const projectId = request.params.arguments.projectId as string;
+            const args = request.params
+              .arguments as unknown as CreateProjectOptions;
+            const response = await timingClient.projects.update(
+              projectId,
+              args,
+            );
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+          case "timing_start_time_entry": {
+            const args = request.params
+              .arguments as unknown as StartTimerOptions;
+            const response = await timingClient.timeEntries.start(args);
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+          case "timing_stop_time_entry": {
+            const response = await timingClient.timeEntries.stop();
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+          case "timing_list_time_entries": {
+            const args = request.params.arguments as Record<string, unknown>;
+            const response = await timingClient.timeEntries.list(args);
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+          case "timing_create_time_entry": {
+            const args = request.params
+              .arguments as unknown as CreateTimeEntryOptions;
+            const response = await timingClient.timeEntries.create(args);
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+          case "timing_time_entry": {
+            const args = request.params.arguments as { id: string };
+            const response = await timingClient.timeEntries.get(args.id);
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+          case "timing_update_time_entry": {
+            const timeEntryId = request.params.arguments.timeEntryId as string;
+            const args = request.params
+              .arguments as unknown as CreateTimeEntryOptions;
+            const response = await timingClient.timeEntries.update(
+              timeEntryId,
+              args,
+            );
+            return {
+              content: [
+                {
+                  type: "text",
+                  data: JSON.stringify(response),
+                },
+              ],
+            };
+          }
+          default:
+            throw new Error(`Unknown tool: ${request.params.name}`);
+        }
+      } catch {
+        console.error("Error processing request:", request);
+        return {
+          content: [
+            {
+              type: "text",
+              data: "Error processing request",
+            },
+          ],
+        };
+      }
+    },
+  );
+
+  server.setRequestHandler(ListToolsRequestSchema, async () => {
+    console.error("Received list tools request");
+    return {
+      tools: [
+        listProjectsTool,
+        projectTool,
+        createProjectTool,
+        updateProjectTool,
+        startTimeEntryTool,
+        stopTimeEntryTool,
+        listTimeEntriesTool,
+        createTimeEntryTool,
+        timeEntryTool,
+        updateTimeEntryTool,
+      ],
+    };
+  });
+
+  const transport = new StdioServerTransport();
+  console.log("Connecting to transport...");
+  await server.connect(transport);
+
+  console.log("Connected to transport");
+}
+
+main().catch((error) => {
+  console.error("Error:", error);
+  process.exit(1);
+});
