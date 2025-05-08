@@ -260,7 +260,7 @@ async function main() {
     process.exit(1);
   }
 
-  console.log("Connecting to Timing API...");
+  console.error("Connecting to Timing API...");
   const server = new Server(
     {
       name: "timing",
@@ -456,10 +456,10 @@ async function main() {
   });
 
   const transport = new StdioServerTransport();
-  console.log("Connecting to transport...");
+  console.error("Connecting to transport...");
   await server.connect(transport);
 
-  console.log("Connected to transport");
+  console.error("Connected to transport");
 }
 
 main().catch((error) => {
