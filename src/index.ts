@@ -17,7 +17,7 @@ import {
 } from "timing-api-client/dist/resources/projects";
 
 const listProjectsTool: Tool = {
-  name: "timing_list_projectss",
+  name: "timing_list_projects",
   description: "List projects in Timing",
   inputSchema: {
     type: "object",
@@ -268,7 +268,7 @@ async function main() {
     },
     {
       capabilities: {
-        tools: true, // Advertise tool capability
+        tools: {},
       },
     },
   );
@@ -289,8 +289,9 @@ async function main() {
 
         switch (request.params.name) {
           case "timing_list_projects": {
+            console.error(request.params.arguments);
             const args = request.params.arguments as ListProjectsQuery;
-            const response = await timingClient.projects.list(args);
+            const response = await timingClient.projects.list();
             return {
               content: [
                 {
