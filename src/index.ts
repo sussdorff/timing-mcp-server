@@ -1,14 +1,79 @@
 import {
   McpServer,
   ResourceTemplate,
+  ToolHandler,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { Tool } from "@modelcontextprotocol/sdk/types.js";
+import { TimingAPIClient } from "timing-api-client";
 
 const server = new McpServer({
   name: "Timing",
   version: "0.0.1",
 });
+
+const apiClient = new TimingAPIClient();
+
+// Placeholder handler functions
+const handleListProjects: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleListProjects called with input:", input);
+  return { projects: [] };
+};
+
+const handleGetProject: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleGetProject called with input:", input);
+  return { project: {} };
+};
+
+const handleCreateProject: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleCreateProject called with input:", input);
+  return { project: {} };
+};
+
+const handleUpdateProject: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleUpdateProject called with input:", input);
+  return { project: {} };
+};
+
+const handleStartTimeEntry: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleStartTimeEntry called with input:", input);
+  return { time_entry: {} };
+};
+
+const handleStopTimeEntry: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleStopTimeEntry called with input:", input);
+  return { time_entry: {} };
+};
+
+const handleListTimeEntries: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleListTimeEntries called with input:", input);
+  return { time_entries: [] };
+};
+
+const handleCreateTimeEntry: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleCreateTimeEntry called with input:", input);
+  return { time_entry: {} };
+};
+
+const handleGetTimeEntry: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleGetTimeEntry called with input:", input);
+  return { time_entry: {} };
+};
+
+const handleUpdateTimeEntry: ToolHandler = async (input) => {
+  // TODO: Implement using apiClient
+  console.log("handleUpdateTimeEntry called with input:", input);
+  return { time_entry: {} };
+};
 
 const listProjectsTool: Tool = {
   name: "timing_list_projectss",
@@ -24,6 +89,8 @@ const listProjectsTool: Tool = {
   },
 };
 
+server.registerTool(listProjectsTool, handleListProjects);
+
 const projectTool: Tool = {
   name: "timing_project",
   description: "Get project details",
@@ -37,6 +104,8 @@ const projectTool: Tool = {
     },
   },
 };
+
+server.registerTool(projectTool, handleGetProject);
 
 const createProjectTool: Tool = {
   name: "timing_create_project",
@@ -68,6 +137,8 @@ const createProjectTool: Tool = {
   },
 };
 
+server.registerTool(createProjectTool, handleCreateProject);
+
 const updateProjectTool: Tool = {
   name: "timing_update_project",
   description: "Update an existing project",
@@ -98,6 +169,8 @@ const updateProjectTool: Tool = {
   },
 };
 
+server.registerTool(updateProjectTool, handleUpdateProject);
+
 const startTimeEntryTool: Tool = {
   name: "timing_start_time_entry",
   description: "Start a new time entry",
@@ -124,6 +197,8 @@ const startTimeEntryTool: Tool = {
   },
 };
 
+server.registerTool(startTimeEntryTool, handleStartTimeEntry);
+
 const stopTimeEntryTool: Tool = {
   name: "timing_stop_time_entry",
   description: "Stop the current time entry",
@@ -131,6 +206,8 @@ const stopTimeEntryTool: Tool = {
     type: "object",
   },
 };
+
+server.registerTool(stopTimeEntryTool, handleStopTimeEntry);
 
 const listTimeEntriesTool: Tool = {
   name: "timing_list_time_entries",
@@ -173,6 +250,8 @@ const listTimeEntriesTool: Tool = {
   },
 };
 
+server.registerTool(listTimeEntriesTool, handleListTimeEntries);
+
 const createTimeEntryTool: Tool = {
   name: "timing_create_time_entry",
   description: "Create a new time entry",
@@ -203,6 +282,8 @@ const createTimeEntryTool: Tool = {
   },
 };
 
+server.registerTool(createTimeEntryTool, handleCreateTimeEntry);
+
 const timeEntryTool: Tool = {
   name: "timing_time_entry",
   description: "Get time entry details",
@@ -216,6 +297,8 @@ const timeEntryTool: Tool = {
     },
   },
 };
+
+server.registerTool(timeEntryTool, handleGetTimeEntry);
 
 const updateTimeEntryTool: Tool = {
   name: "timing_update_time_entry",
@@ -246,6 +329,8 @@ const updateTimeEntryTool: Tool = {
     },
   },
 };
+
+server.registerTool(updateTimeEntryTool, handleUpdateTimeEntry);
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
