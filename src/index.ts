@@ -22,9 +22,13 @@ const listProjectsTool: Tool = {
   inputSchema: {
     type: "object",
     properties: {
-      parentId: {
+      title: {
         type: "string",
-        description: "The ID of the parent project.",
+        description: "Filter by project title",
+      },
+      hideArchived: {
+        type: "boolean",
+        description: "Hide archived projects",
       },
     },
   },
@@ -289,14 +293,13 @@ async function main() {
 
         switch (request.params.name) {
           case "timing_list_projects": {
-            console.error(request.params.arguments);
             const args = request.params.arguments as ListProjectsQuery;
-            const response = await timingClient.projects.list();
+            const response = await timingClient.projects.list(args);
             return {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -304,12 +307,14 @@ async function main() {
 
           case "timing_project": {
             const args = request.params.arguments as { id: string };
+            console.error("Project ID:", args.id);
             const response = await timingClient.projects.get(args.id);
+            console.error("Project response:", response);
             return {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -323,7 +328,7 @@ async function main() {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -340,7 +345,7 @@ async function main() {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -353,7 +358,7 @@ async function main() {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -364,7 +369,7 @@ async function main() {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -376,7 +381,7 @@ async function main() {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -389,7 +394,7 @@ async function main() {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -401,7 +406,7 @@ async function main() {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -418,7 +423,7 @@ async function main() {
               content: [
                 {
                   type: "text",
-                  data: JSON.stringify(response),
+                  text: JSON.stringify(response),
                 },
               ],
             };
@@ -429,10 +434,11 @@ async function main() {
       } catch {
         console.error("Error processing request:", request);
         return {
+          isError: true,
           content: [
             {
               type: "text",
-              data: "Error processing request",
+              text: "Error processing request",
             },
           ],
         };
