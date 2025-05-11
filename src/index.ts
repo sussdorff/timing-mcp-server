@@ -257,6 +257,67 @@ const updateTimeEntryTool: Tool = {
   },
 };
 
+const reportTool: Tool = {
+  name: "generate_timing_report",
+  description: "Get report details",
+  inputSchema: {
+    type: "object",
+    properties: {
+      startDateMin: {
+        type: "string",
+        description: "Start date of the report",
+      },
+      startDateMax: {
+        type: "string",
+        description: "End date of the report",
+      },
+      projects: {
+        type: "array",
+        items: {
+          type: "string",
+          description: "The ID of the project.",
+        },
+      },
+      includeChildProjects: {
+        type: "boolean",
+        description: "Include child projects.",
+      },
+      searchQuery: {
+        type: "string",
+        description: "Search query for the report.",
+      },
+      columns: {
+        type: "array",
+        items: {
+          type: "string",
+          description:
+            "Which columns to show. The `user` column is ignored if `includeTeamMembers` is false.",
+        },
+      },
+      projectGroupingLevel: {
+        type: "number",
+        description:
+          "When this argument is provided, report lines for projects below the given level will be aggregated by their parent project on the given level.",
+      },
+      includeProjectData: {
+        type: "boolean",
+        description: "Include project data.",
+      },
+      timespanGroupingMode: {
+        type: "string",
+        description: "Timespan grouping mode.",
+      },
+      sort: {
+        type: "array",
+        items: {
+          type: "string",
+          description: "Sort order for the report.",
+        },
+      },
+    },
+  },
+};
+
 async function main() {
   const apiKey = process.env.TIMING_API_KEY;
   if (!apiKey) {
@@ -428,6 +489,18 @@ async function main() {
               ],
             };
           }
+          case "generate_timing_report": {
+            const args = request.params.arguments as Record<string, unknown>;
+            const response = await timingClient.reports.generate(args);
+            return {
+              content: [
+                {
+                  type: "text",
+                  text: JSON.stringify(response),
+                },
+              ],
+            };
+          }
           default:
             throw new Error(`Unknown tool: ${request.params.name}`);
         }
@@ -460,6 +533,7 @@ async function main() {
         createTimeEntryTool,
         timeEntryTool,
         updateTimeEntryTool,
+        reportTool,
       ],
     };
   });

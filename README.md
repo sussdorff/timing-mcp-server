@@ -72,20 +72,19 @@ For Cursor, save this as mcp.json in your Cursor configuration directory at:
 
 ## Available Tools
 
-| Tool Name | Description |
-|-----------|-------------|
-| `timing_list_projects`  | List projects in Timing  |
-| `timing_project`  | Get project details  |
-| `timing_create_project`  | Create a new project  |
-| `timing_update_project`  | Update an existing project  |
-| `timing_start_time_entry`  | Start a new time entry  |
-| `timing_stop_time_entry`  | Stop the current time entry  |
-| `timing_list_time_entries`  | List time entries  |
-| `timing_create_time_entry`  | Create a new time entry  |
-| `timing_time_entry`  | Get time entry details  |
-| `timing_update_time_entry`  | Update an existing time entry  |
-
-
+| Tool Name                  | Description                                    |
+| -------------------------- | ---------------------------------------------- |
+| `timing_list_projects`     | List projects in Timing                        |
+| `timing_project`           | Get project details                            |
+| `timing_create_project`    | Create a new project                           |
+| `timing_update_project`    | Update an existing project                     |
+| `timing_start_time_entry`  | Start a new time entry                         |
+| `timing_stop_time_entry`   | Stop the current time entry                    |
+| `timing_list_time_entries` | List time entries                              |
+| `timing_create_time_entry` | Create a new time entry                        |
+| `timing_time_entry`        | Get time entry details                         |
+| `timing_update_time_entry` | Update an existing time entry                  |
+| `timing_generate_report`   | Generate report using time entry and app usage |
 
 ## Contributing
 
